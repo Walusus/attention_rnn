@@ -4,57 +4,33 @@ import torch.nn as nn
 
 # TODO add comments
 class Attention(nn.Module):
-    def __init__(self, feature_dim, max_len):
+    eps = 1e-10
+
+    def __init__(self, feature_num):
         super(Attention, self).__init__()
-
-        # TODO resolve step_dim
-        step_dim = max_len
-
-        # TODO replace with nn.linear
-        self.feature_dim = feature_dim
-        self.step_dim = step_dim
-        self.features_dim = 0
-
-        weight = torch.zeros(feature_dim, 1)
-        nn.init.kaiming_uniform_(weight)
-
-        self.weight = nn.Parameter(weight)
-        self.b = nn.Parameter(torch.zeros(step_dim))
+        self.dense = nn.Linear(feature_num, 1, bias=True)
 
     def forward(self, x):
-        # TODO trim and tune
-        feature_dim = self.feature_dim
-        step_dim = self.step_dim
+        u = torch.tanh(self.dense(x)).squeeze()
 
-        eij = torch.mm(
-            x.contiguous().view(-1, feature_dim),
-            self.weight
-        ).view(-1, step_dim)
+        v = torch.exp(u)
+        a = v / (torch.sum(v, 1, keepdim=True) + Attention.eps)
 
-        eij = eij + self.b
-
-        eij = torch.tanh(eij)
-        a = torch.exp(eij)
-
-        a = a / (torch.sum(a, 1, keepdim=True) + 1e-10)
-
-        weighted_input = x * torch.unsqueeze(a, -1)
-        return torch.sum(weighted_input, 1)
+        x = x * a.unsqueeze(-1)
+        return torch.sum(x, 1)
 
 
 class Net(nn.Module):
     def __init__(self, embed_size, vocab_size, max_len):
         super(Net, self).__init__()
 
-        # TODO dropout??
         self.embedding = nn.Embedding(vocab_size, embed_size)
 
         # TODO tune num_layers
-        # TODO test LSTM/GRU layers
         self.rnn = nn.RNN(embed_size, 128, num_layers=2, bidirectional=True, batch_first=True)
+        self.attention = Attention(128 * 2)
 
-        self.attention = Attention(128 * 2, max_len)
-
+        # TODO dropout??
         self.linear1 = nn.Linear(128 * 2, 64)
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(64, 7)

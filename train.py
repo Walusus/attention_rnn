@@ -38,6 +38,7 @@ loss_fn = torch.nn.CrossEntropyLoss()
 
 # TODO cleanup training function
 # TODO tweak hyper parameters
+# TODO remove test loader
 # Train model
 test_loss_track = []
 train_loss_track = []
