@@ -9,7 +9,7 @@ import math
 import data_preparation as dp
 from model import Net
 
-
+# TODO Unify comments
 # Load and prepare dataset
 train_data, valid_data = dp.load_labeled_data()
 word_to_idx, max_len = dp.get_encodings(train_data + valid_data)
@@ -36,6 +36,8 @@ learning_rate = 1e-2
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 loss_fn = torch.nn.CrossEntropyLoss()
 
+# TODO cleanup training function
+# TODO tweak hyper parameters
 # Train model
 test_loss_track = []
 train_loss_track = []
@@ -75,6 +77,7 @@ for epoch in range(epochs_num):
     test_loss_track.append(loss)
     print(f"Validation accuracy: {100 * accuracy:.1f}%,\tTest loss: {loss:f}")
 
+# TODO fix plotting
 # Plot learning results.
 plt.figure(figsize=(8, 4))
 plt.subplot(111)
@@ -111,6 +114,7 @@ plt.title(f"Validation set accuracy: {100 * accuracy:.1f}%")
 plt.savefig("plots/conf_mat.png")
 plt.show()
 
+# TODO fix save model utility
 # Save model weights
 ans = input("Save model? [y/n]")
 if ans is 'y':
