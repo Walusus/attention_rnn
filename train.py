@@ -6,19 +6,19 @@ import sklearn.metrics as mtr
 import seaborn as sns
 import math
 
-import data_preparation as dp
+import data_utils as du
 from model import Net
 
 # TODO Unify comments
 # Load and prepare dataset
-train_data, valid_data = dp.load_labeled_data()
-word_to_idx, max_len = dp.get_encodings(train_data + valid_data)
+train_data, valid_data = du.load_labeled_data()
+word_to_idx, max_len = du.get_encodings(train_data + valid_data)
 
-train_set = dp.encode_dataset(train_data, word_to_idx)
-valid_set = dp.encode_dataset(valid_data, word_to_idx)
+train_set = du.encode_dataset(train_data, word_to_idx)
+valid_set = du.encode_dataset(valid_data, word_to_idx)
 
-train_x, train_y = dp.dataset_to_tensor(train_set, max_len)
-valid_x, valid_y = dp.dataset_to_tensor(valid_set, max_len)
+train_x, train_y = du.dataset_to_tensor(train_set, max_len)
+valid_x, valid_y = du.dataset_to_tensor(valid_set, max_len)
 
 # Create dataloaders
 batch_size = 50
@@ -29,7 +29,7 @@ valid_dataset = torch.utils.data.TensorDataset(valid_x, valid_y)
 valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=batch_size, shuffle=True)
 
 # Load network model
-net = Net(100, len(word_to_idx), max_len).to(device=dp.device, dtype=torch.float)
+net = Net(100, len(word_to_idx), max_len).to(device=du.device, dtype=torch.float)
 
 # Choose criterion and loss function
 learning_rate = 1e-2
