@@ -2,12 +2,13 @@ import torch
 import torch.nn as nn
 
 
+# TODO add comments
 class Attention(nn.Module):
-    def __init__(self, feature_dim):
+    def __init__(self, feature_dim, max_len):
         super(Attention, self).__init__()
 
         # TODO resolve step_dim
-        step_dim = 2
+        step_dim = max_len
 
         # TODO replace with nn.linear
         self.feature_dim = feature_dim
@@ -30,8 +31,7 @@ class Attention(nn.Module):
             self.weight
         ).view(-1, step_dim)
 
-        if self.bias:
-            eij = eij + self.b
+        eij = eij + self.b
 
         eij = torch.tanh(eij)
         a = torch.exp(eij)
@@ -43,23 +43,25 @@ class Attention(nn.Module):
 
 
 class Net(nn.Module):
-    def __init__(self, embed_size):
+    def __init__(self, embed_size, vocab_size, max_len):
         super(Net, self).__init__()
 
         # TODO dropout??
-        # TODO test embedding
+        self.embedding = nn.Embedding(vocab_size, embed_size)
 
         # TODO tune num_layers
         # TODO test LSTM/GRU layers
-        self.rnn = nn.RNN(embed_size, 128, num_layers=3, bidirectional=True, batch_first=True)
+        self.rnn = nn.RNN(embed_size, 128, num_layers=2, bidirectional=True, batch_first=True)
 
-        self.attention = Attention(128 * 2)
+        self.attention = Attention(128 * 2, max_len)
 
-        self.linear1 = nn.Linear(64 * 2, 64)
+        self.linear1 = nn.Linear(128 * 2, 64)
         self.relu = nn.ReLU()
-        self.linear2 = nn.Linear(64, 1)
+        self.linear2 = nn.Linear(64, 7)
 
     def forward(self, x):
+        x = self.embedding(x)
+
         x, _ = self.rnn(x)
         x = self.attention(x)
 
