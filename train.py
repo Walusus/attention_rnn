@@ -10,7 +10,7 @@ import pickle
 import data_utils as du
 from model import Net
 
-# TODO Unify comments
+
 # Load and prepare dataset
 train_data, valid_data = du.load_labeled_data()
 word_to_idx, max_len = du.get_encodings(train_data + valid_data)
@@ -30,20 +30,17 @@ valid_dataset = torch.utils.data.TensorDataset(valid_x, valid_y)
 valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=batch_size, shuffle=True)
 
 # Load network model
-net = Net(100, len(word_to_idx), max_len).to(device=du.device, dtype=torch.float)
+net = Net(100, len(word_to_idx)).to(device=du.device, dtype=torch.float)
 
 # Choose criterion and loss function
-learning_rate = 1e-2
+learning_rate = 1e-1
 optimizer = optim.SGD(net.parameters(), lr=learning_rate, momentum=0.9)
 loss_fn = torch.nn.CrossEntropyLoss()
 
-# TODO cleanup training function
-# TODO tweak hyper parameters
-# TODO remove test loader
 # Train model
 test_loss_track = []
 train_loss_track = []
-epochs_num = 20
+epochs_num = 10
 train_batch_num = math.ceil(len(train_set) / batch_size)
 for epoch in range(epochs_num):
     net.train()
@@ -79,12 +76,11 @@ for epoch in range(epochs_num):
     test_loss_track.append(loss)
     print(f"Validation accuracy: {100 * accuracy:.1f}%,\tTest loss: {loss:f}")
 
-# TODO fix plotting
 # Plot learning results.
 plt.figure(figsize=(8, 4))
 plt.subplot(111)
 plt.plot(np.linspace(1, epochs_num, num=len(train_loss_track)), train_loss_track, label="Train loss")
-plt.plot(np.linspace(1, epochs_num, num=len(test_loss_track)), test_loss_track, label="Test loss")
+plt.plot(np.linspace(1, epochs_num, num=len(test_loss_track)), test_loss_track, label="Validation loss")
 plt.title(f"Epochs: {epochs_num:d}, batch size: {batch_size:d}, lr: {learning_rate:.1e}")
 plt.xlabel("Epochs")
 plt.ylabel("Value")

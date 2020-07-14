@@ -2,9 +2,10 @@ import os
 import json
 import torch
 
-# TODO add comments
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+# Label encoding dicts
 class_to_num = {"AddToPlaylist": 0,
                 "BookRestaurant": 1,
                 "GetWeather": 2,
@@ -27,6 +28,7 @@ def string_to_word_list(string):
     stripped_list = []
 
     for word in word_list:
+        # Cleanup and unify words
         strp_word = word.strip(" .:?!,").rstrip("'s").lower()
         if strp_word.replace('/', '').replace(':', '').replace('-', '').isnumeric():
             strp_word = " num "
@@ -44,6 +46,7 @@ def load_labeled_data():
         with open(root + filename, 'r') as f:
             _, data = json.load(f).popitem()
 
+            # Determine label and data type by file name
             label = class_to_num[filename.strip(".json").split("_")[1]]
 
             for s in data:
@@ -58,6 +61,7 @@ def load_labeled_data():
 
 
 def get_encodings(dataset):
+    # Use set to avoid repetition
     vocab = set()
     max_len = 0
 
@@ -67,6 +71,7 @@ def get_encodings(dataset):
         vocab.update(word_list)
 
     word_to_idx = {word: i + 1 for i, word in enumerate(vocab)}
+    # Special word to pad sentences
     word_to_idx[" pad "] = 0
     return word_to_idx, max_len
 

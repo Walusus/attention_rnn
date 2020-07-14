@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-# TODO add comments
+# Class representing attention layer
 class Attention(nn.Module):
     eps = 1e-10
 
@@ -16,17 +16,17 @@ class Attention(nn.Module):
         v = torch.exp(u)
         a = v / (torch.sum(v, 1, keepdim=True) + Attention.eps)
 
+        # Multiply input by computed weights
         x = x * a.unsqueeze(-1)
         return torch.sum(x, 1)
 
 
 class Net(nn.Module):
-    def __init__(self, embed_size, vocab_size, max_len):
+    def __init__(self, embed_size, vocab_size):
         super(Net, self).__init__()
 
         self.embedding = nn.Embedding(vocab_size, embed_size)
 
-        # TODO tune num_layers
         self.rnn = nn.RNN(embed_size, 128, num_layers=2, bidirectional=True, batch_first=True)
         self.attention = Attention(128 * 2)
 
