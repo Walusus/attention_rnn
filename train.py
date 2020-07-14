@@ -5,6 +5,7 @@ import numpy as np
 import sklearn.metrics as mtr
 import seaborn as sns
 import math
+import pickle
 
 import data_utils as du
 from model import Net
@@ -42,7 +43,7 @@ loss_fn = torch.nn.CrossEntropyLoss()
 # Train model
 test_loss_track = []
 train_loss_track = []
-epochs_num = 50
+epochs_num = 20
 train_batch_num = math.ceil(len(train_set) / batch_size)
 for epoch in range(epochs_num):
     net.train()
@@ -95,7 +96,7 @@ plt.show()
 accuracy_sum = 0
 num = 0
 conf_mat = np.zeros((7, 7), dtype=np.int)
-for batch_num, (inputs, labels) in enumerate(train_loader):
+for batch_num, (inputs, labels) in enumerate(valid_loader):
     outputs = net(inputs)
     _, pred_labels = outputs.cpu().detach().max(1)
     accuracy_sum += mtr.accuracy_score(labels.cpu(), pred_labels)
@@ -115,9 +116,10 @@ plt.title(f"Validation set accuracy: {100 * accuracy:.1f}%")
 plt.savefig("plots/conf_mat.png")
 plt.show()
 
-# TODO fix save model utility
-# Save model weights
+# Save model weights and word encodings
 ans = input("Save model? [y/n]")
 if ans is 'y':
     filename = input("Save as: ")
     torch.save(net.state_dict(), "weights/" + filename + ".pt")
+    with open("weights/" + filename + ".pkl", "wb") as f:
+        pickle.dump(word_to_idx, f)

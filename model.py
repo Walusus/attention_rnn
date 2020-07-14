@@ -11,7 +11,7 @@ class Attention(nn.Module):
         self.dense = nn.Linear(feature_num, 1, bias=True)
 
     def forward(self, x):
-        u = torch.tanh(self.dense(x)).squeeze()
+        u = torch.tanh(self.dense(x)).squeeze(2)
 
         v = torch.exp(u)
         a = v / (torch.sum(v, 1, keepdim=True) + Attention.eps)

@@ -13,6 +13,14 @@ class_to_num = {"AddToPlaylist": 0,
                 "SearchCreativeWork": 5,
                 "SearchScreeningEvent": 6}
 
+num_to_class = {0: "AddToPlaylist",
+                1: "BookRestaurant",
+                2: "GetWeather",
+                3: "PlayMusic",
+                4: "RateBook",
+                5: "SearchCreativeWork",
+                6: "SearchScreeningEvent"}
+
 
 def string_to_word_list(string):
     word_list = string.split()
