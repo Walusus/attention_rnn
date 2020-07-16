@@ -22,9 +22,10 @@ class Attention(nn.Module):
 
 
 class Net(nn.Module):
-    def __init__(self, embed_size, vocab_size):
+    def __init__(self, vocab_size):
         super(Net, self).__init__()
 
+        embed_size = 500
         self.embedding = nn.Embedding(vocab_size, embed_size)
 
         self.rnn = nn.RNN(embed_size, 128, num_layers=2, bidirectional=True, batch_first=True)
@@ -34,6 +35,7 @@ class Net(nn.Module):
         self.linear1 = nn.Linear(128 * 2, 64)
         self.relu = nn.ReLU()
         self.linear2 = nn.Linear(64, 7)
+        self.softmax = nn.Softmax(dim=1)
 
     def forward(self, x):
         x = self.embedding(x)
@@ -44,4 +46,6 @@ class Net(nn.Module):
         x = self.linear1(x)
         x = self.relu(x)
         x = self.linear2(x)
+        x = self.softmax(x)
+
         return x

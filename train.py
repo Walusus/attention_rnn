@@ -30,7 +30,7 @@ valid_dataset = torch.utils.data.TensorDataset(valid_x, valid_y)
 valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=batch_size, shuffle=True)
 
 # Load network model
-net = Net(100, len(word_to_idx)).to(device=du.device, dtype=torch.float)
+net = Net(len(word_to_idx)).to(device=du.device, dtype=torch.float)
 
 # Choose criterion and loss function
 learning_rate = 1e-1
@@ -40,7 +40,7 @@ loss_fn = torch.nn.CrossEntropyLoss()
 # Train model
 test_loss_track = []
 train_loss_track = []
-epochs_num = 10
+epochs_num = 20
 train_batch_num = math.ceil(len(train_set) / batch_size)
 for epoch in range(epochs_num):
     net.train()

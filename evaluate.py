@@ -13,7 +13,7 @@ filename = input("File name: ")
 with open("weights/" + filename + ".pkl", "rb") as f:
     word_to_idx = pickle.load(f)
 
-net = Net(100, len(word_to_idx), 26).to(device=du.device, dtype=torch.float)
+net = Net(len(word_to_idx)).to(device=du.device, dtype=torch.float)
 net.load_state_dict(torch.load("weights/" + filename + ".pt"))
 net.eval()
 
