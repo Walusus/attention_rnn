@@ -1,5 +1,5 @@
 # attention_rnn
-A little project made for recruitment
+A little project made for recruitment. My task was to implement a recurrent neural network with an attention module for a classification problem. Dataset consists of sentences in English. There are seven labels representing intentions.
 
 ### evaluate.py
 Demo script. A trained network weights file is needed to run. 
