@@ -17,10 +17,10 @@ The file containing the model definition.
 ![Training report](https://github.com/Walusus/attention_rnn/blob/master/plots/train_report.png "Training report")
 ![Confusion matrix](https://github.com/Walusus/attention_rnn/blob/master/plots/conf_mat.png "Confusion matrix")
 Class labels:
-0. AddToPlaylist
-1. BookRestaurant
-2. GetWeather
-3. PlayMusic
-4. RateBook
-5. SearchCreativeWork
-6. SearchScreeningEvent
+* 0 - AddToPlaylist
+* 1 - BookRestaurant
+* 2 - GetWeather
+* 3 - PlayMusic
+* 4 - RateBook
+* 5 - SearchCreativeWork
+* 6 - SearchScreeningEvent
