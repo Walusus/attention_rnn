@@ -26,6 +26,4 @@ Class labels:
 * 6 - SearchScreeningEvent
 
 
-**Any publication based on these datasets must include a full citation to the following paper in which the results were published by Snips:** 
-["Snips Voice Platform: an embedded Spoken Language Understanding system 
-for private-by-design voice interfaces"](https://arxiv.org/abs/1805.10190)
+[**Dataset source**](https://github.com/snipsco/nlu-benchmark/tree/master/2017-06-custom-intent-engines)
